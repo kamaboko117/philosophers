@@ -6,13 +6,14 @@
 #    By: asaboure <asaboure@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/21 14:20:20 by asaboure          #+#    #+#              #
-#    Updated: 2021/11/23 13:25:17 by asaboure         ###   ########.fr        #
+#    Updated: 2021/11/23 14:37:59 by asaboure         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= philo
 
-SRCS	=	philo.c
+SRCS	=	philo.c																\
+			sources/utils.c
 
 BONUSSRCS	=
 
