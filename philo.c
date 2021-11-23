@@ -34,19 +34,43 @@ int	check_args(int ac, char **av)
 	return (1);
 }
 
-void	*routine(void)
+void	*routine(void *arg)
 {
-	printf("test from threads\n");
+	struct timeval	death;
+	struct timeval	current;
+	t_data			*data;
+
+	data = (t_data *)arg;
+	gettimeofday(&death, NULL);
+	printf("start: %ld:%06ld\n\n", death.tv_sec, death.tv_usec);
+	timeadd(&death, data->dtime);
+	printf("death: %ld:%06ld\n\n", death.tv_sec, death.tv_usec);
+	while (1)
+	{
+		gettimeofday(&current, NULL);
+		if (islater(current, death))
+		{
+			printf("%ld%03ld X died\n", current.tv_sec, current.tv_usec / 1000);
+			return (NULL);
+		}
+	}
 	return (NULL);
 }
 
 void	philosophers(t_data *data)
 {
+	pthread_t	t1;
+
 	printf("number of philosophers: %d\ntime to die: %d\ntime to eat: %d\ntime \
-to sleep: %d\noption: %d\n", data->size, data->dtime, data->etime, data->stime,
+to sleep: %d\noption: %d\n\n", data->size, data->dtime, data->etime, data->stime,
 		data->option);
+	if (pthread_create(&t1, NULL, &routine, data) != 0)
+		return ;
+	if (pthread_join(t1, NULL) != 0)
+		return ;
 }
 
+//may need to check for long int overflows
 int	main(int ac, char **av)
 {
 	t_data	data;

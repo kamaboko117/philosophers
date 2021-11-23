@@ -6,7 +6,7 @@
 /*   By: asaboure <asaboure@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 14:36:12 by asaboure          #+#    #+#             */
-/*   Updated: 2021/11/23 14:40:55 by asaboure         ###   ########.fr       */
+/*   Updated: 2021/11/23 17:20:12 by asaboure         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,20 @@ int	puterror(char *error)
 {
 	printf("%s", error);
 	return (0);
+}
+
+int	islater(struct timeval t1, struct timeval t2)
+{
+	if (t1.tv_sec > t2.tv_sec)
+		return (1);
+	if (t1.tv_sec == t2.tv_sec && t1.tv_usec > t2.tv_usec)
+		return (1);
+	return (0);
+}
+
+void	timeadd(struct timeval *t, int ms)
+{
+	ms *= 100;
+	t->tv_usec += ms % 1000000;
+	t->tv_sec += ms / 1000000;
 }
