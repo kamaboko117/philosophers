@@ -6,7 +6,7 @@
 /*   By: asaboure <asaboure@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 14:36:01 by asaboure          #+#    #+#             */
-/*   Updated: 2021/11/23 18:40:58 by asaboure         ###   ########.fr       */
+/*   Updated: 2021/11/24 15:09:33 by asaboure         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@ typedef struct s_data
 	int				etime;
 	int				stime;
 	int				option;
-	pthread_mutex_t	mutex;
+	pthread_mutex_t	*forks;
+	int				*fstate;
 	int				x;
+
 }				t_data;
 
 int		ft_atoi(const char *str);
@@ -31,5 +33,6 @@ int		isnumber(char *str);
 int		puterror(char *error);
 void	timeadd(struct timeval *t, int ms);
 int		islater(struct timeval t1, struct timeval t2);
+void	ft_bzero(void *s, size_t n);
 
 #endif
