@@ -6,7 +6,7 @@
 /*   By: asaboure <asaboure@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 12:17:36 by asaboure          #+#    #+#             */
-/*   Updated: 2021/11/25 12:48:22 by asaboure         ###   ########.fr       */
+/*   Updated: 2021/11/25 14:32:21 by asaboure         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,14 @@ void	philosopher_eat(t_data *data, struct timeval *death, struct timeval
 		pthread_mutex_unlock(&data->forks[x]);
 		data->fstate[x] = 0;
 	}
+	data->xmeals[x - 1]++;
 }
 
 void	philosopher_sleep(t_data *data, int x, t_time t)
 {
-	usleep(data->stime);
 	printf("%ld%03ld %d is sleeping\n", t.current.tv_sec, t.current.tv_usec
 		/ 1000, x);
+	usleep(data->stime);
 }
 
 void	philosopher_think(int x, t_time t)
@@ -47,9 +48,20 @@ void	philosopher_think(int x, t_time t)
 		/ 1000, x);
 }
 
-//eat
-//sleep
-//think
+int	checkoption(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->size)
+	{
+		if (data->xmeals[i] < data->option || data->option == -1)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 void	*routine(void *arg)
 {
 	t_time	t;
@@ -69,6 +81,8 @@ void	*routine(void *arg)
 		if (try_forks(data, x, t.current))
 		{
 			philosopher_eat(data, &t.death, t.current, x);
+			if (checkoption(data))
+				return (NULL);
 			philosopher_sleep(data, x, t);
 			philosopher_think(x, t);
 		}

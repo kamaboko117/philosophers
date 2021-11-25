@@ -6,7 +6,7 @@
 /*   By: asaboure <asaboure@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 14:36:01 by asaboure          #+#    #+#             */
-/*   Updated: 2021/11/25 12:49:15 by asaboure         ###   ########.fr       */
+/*   Updated: 2021/11/25 13:58:08 by asaboure         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct s_data
 	pthread_mutex_t	*forks;
 	int				*fstate;
 	int				x;
+	int				*xmeals;
 }				t_data;
 
 int		ft_atoi(const char *str);

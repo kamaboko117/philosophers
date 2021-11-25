@@ -6,37 +6,35 @@
 /*   By: asaboure <asaboure@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 12:47:33 by asaboure          #+#    #+#             */
-/*   Updated: 2021/11/25 12:49:53 by asaboure         ###   ########.fr       */
+/*   Updated: 2021/11/25 15:49:04 by asaboure         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 #include <stdio.h>
 
+void	lock_fork(t_data *data, struct timeval current, int x)
+{
+	pthread_mutex_lock(&data->forks[x]);
+	data->fstate[x] = 1;
+	printf("%ld%03ld %d has taken a fork\n", current.tv_sec, current.tv_usec
+		/ 1000, x);
+}
+
 int	try_forks(t_data *data, int x, struct timeval current)
 {
-	if (data->fstate[x - 1] == 0)
+	int	left;
+	int	right;
+
+	left = x - 1;
+	right = x;
+	if (right == data->size)
+		right = 0;
+	if (data->fstate[left] == 0 && data->fstate[right] == 0)
 	{
-		pthread_mutex_lock(&data->forks[x - 1]);
-		data->fstate[x - 1] = 1;
-		printf("%ld%03ld %d has taken a fork\n", current.tv_sec, current.tv_usec
-			/ 1000, x);
-		if (x == data->size && data->fstate[0] == 0)
-		{
-			pthread_mutex_lock(&data->forks[0]);
-			data->fstate[0] = 1;
-			printf("%ld%03ld %d has taken a fork\n", current.tv_sec, current
-				.tv_usec / 1000, x);
-			return (2);
-		}
-		else if (data->fstate[x] == 0)
-		{
-			pthread_mutex_lock(&data->forks[x]);
-			data->fstate[x] = 1;
-			printf("%ld%03ld %d has taken a fork\n", current.tv_sec, current
-				.tv_usec / 1000, x);
-			return (1);
-		}
+		lock_fork(data, current, left);
+		lock_fork(data, current, right);
+		return(1);
 	}
 	return (0);
 }

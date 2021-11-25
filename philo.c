@@ -41,9 +41,6 @@ void	philosophers(t_data *data)
 	pthread_t		*t;
 	int				i;
 
-	printf("number of philosophers: %d\ntime to die: %d\ntime to eat: %d\ntime \
-to sleep: %d\noption: %d\n\n", data->size, data->dtime, data->etime, data->stime,
-		data->option);
 	t = (pthread_t *)malloc(sizeof(pthread_t) * data->size);
 	if (t == NULL)
 		return ;
@@ -84,8 +81,10 @@ int	main(int ac, char **av)
 		data.option = ft_atoi(av[5]);
 	data.forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * data.size);
 	data.fstate = (int *)malloc(sizeof(int) * data.size);
-	if (data.forks == NULL || data.fstate == NULL)
+	data.xmeals = (int *)malloc(sizeof(int) * data.size);
+	if (data.forks == NULL || data.fstate == NULL || data.xmeals == NULL)
 		return (-1);
 	ft_bzero(data.fstate, sizeof(int) * data.size);
+	ft_bzero(data.xmeals, sizeof(int) * data.size);
 	philosophers(&data);
 }
