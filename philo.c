@@ -13,7 +13,6 @@
 #include "philo.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 
 int	usage(void)
 {
@@ -33,79 +32,6 @@ int	check_args(int ac, char **av)
 			return (puterror("every argument should be a positive integer\n"));
 	}
 	return (1);
-}
-
-void	eat(t_data *data, struct timeval *death, struct timeval current, int x)
-{
-	printf("%ld%03ld %d is eating\n", current.tv_sec, current.tv_usec /
-		1000, x);
-	timeadd(death, data->dtime);
-	usleep(data->etime);
-}
-
-int	try_forks(t_data *data, int x, struct timeval current)
-{
-	if (data->fstate[x - 1] == 0)
-	{
-		pthread_mutex_lock(&data->forks[x - 1]);
-		data->fstate[x - 1] = 1;
-		printf("%ld%03ld %d has taken a fork\n", current.tv_sec, current.tv_usec
-			/ 1000, x);
-		if (x == data->size && data->fstate[0] == 0)
-		{
-			pthread_mutex_lock(&data->forks[0]);
-			data->fstate[0] = 1;
-			printf("%ld%03ld %d has taken a fork\n", current.tv_sec, current.tv_usec
-				/ 1000, x);
-				
-			pthread_mutex_unlock(&data->forks[0]);
-			data->fstate[0] = 0;
-		}
-		else
-		{
-			if (data->fstate[x] == 0)
-			{
-				pthread_mutex_lock(&data->forks[x]);
-				data->fstate[x] = 1;
-				printf("%ld%03ld %d has taken a fork\n", current.tv_sec, current.tv_usec
-					/ 1000, x);
-				pthread_mutex_unlock(&data->forks[x]);
-				data->fstate[x] = 0;
-			}
-		}
-	}
-}
-//eat
-//sleep
-//think
-void	*routine(void *arg)
-{
-	struct timeval	death;
-	struct timeval	current;
-	t_data			*data;
-	int				x;
-
-	data = (t_data *)arg;
-	x = data->x;
-	data->x++;
-	gettimeofday(&death, NULL);
-	printf("start: %ld:%06ld\n", death.tv_sec, death.tv_usec);
-	timeadd(&death, data->dtime);
-	printf("death: %ld:%06ld\n\n", death.tv_sec, death.tv_usec);
-	while (69)
-	{
-		gettimeofday(&current, NULL);
-		if (islater(current, death))
-		{
-			printf("%ld%03ld %d died\n", current.tv_sec, current.tv_usec / 1000,
-				x);
-			return (NULL);
-		}
-		if (try_forks)
-			eat(data, &death, current, x);
-		
-	}
-	return (NULL);
 }
 
 //TODO free t in case of error
