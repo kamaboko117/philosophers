@@ -77,6 +77,7 @@ int	main(int ac, char **av)
 	data.stime = ft_atoi(av[4]);
 	data.x = 1;
 	data.option = -1;
+	data.end = 0;
 	if (ac == 6)
 		data.option = ft_atoi(av[5]);
 	data.forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * data.size);

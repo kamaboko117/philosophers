@@ -6,7 +6,7 @@
 /*   By: asaboure <asaboure@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 12:17:36 by asaboure          #+#    #+#             */
-/*   Updated: 2021/11/25 14:32:21 by asaboure         ###   ########.fr       */
+/*   Updated: 2021/11/26 14:23:50 by asaboure         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,21 @@
 #include <stdio.h>
 #include <unistd.h>
 
-void	philosopher_eat(t_data *data, struct timeval *death, struct timeval
-	current, int x)
+void	ft_log(char *s, int x, t_data *data)
 {
-	printf("%ld%03ld %d is eating\n", current.tv_sec, current.tv_usec / 1000, x);
-	timeadd(death, data->dtime + data->etime);
-	usleep(data->etime);
+	struct timeval	t;
+
+	if (data->end)
+		return ;
+	gettimeofday(&t, NULL);
+	printf("%ld%03ld %d %s\n", t.tv_sec, t.tv_usec / 1000, x, s);
+}
+
+void	philosopher_eat(t_data *data, struct timeval *death, int x)
+{
+	ft_log("is eating", x, data);
+	timeadd(death, data->dtime);
+	usleep(data->etime * 1000);
 	pthread_mutex_unlock(&data->forks[x - 1]);
 	data->fstate[x - 1] = 0;
 	if (x == data->size)
@@ -35,31 +44,15 @@ void	philosopher_eat(t_data *data, struct timeval *death, struct timeval
 	data->xmeals[x - 1]++;
 }
 
-void	philosopher_sleep(t_data *data, int x, t_time t)
+void	philosopher_sleep(t_data *data, int x)
 {
-	printf("%ld%03ld %d is sleeping\n", t.current.tv_sec, t.current.tv_usec
-		/ 1000, x);
-	usleep(data->stime);
+	ft_log("is sleeping", x, data);
+	usleep(data->stime * 1000);
 }
 
-void	philosopher_think(int x, t_time t)
+void	philosopher_think(t_data *data, int x)
 {
-	printf("%ld%03ld %d is thinking\n", t.current.tv_sec, t.current.tv_usec
-		/ 1000, x);
-}
-
-int	checkoption(t_data *data)
-{
-	int	i;
-
-	i = 0;
-	while (i < data->size)
-	{
-		if (data->xmeals[i] < data->option || data->option == -1)
-			return (0);
-		i++;
-	}
-	return (1);
+	ft_log("is thinking", x, data);
 }
 
 void	*routine(void *arg)
@@ -76,15 +69,15 @@ void	*routine(void *arg)
 	while (69)
 	{
 		gettimeofday(&t.current, NULL);
-		if (check_death(t, x))
+		if (check_death(data, t, x))
 			return (NULL);
-		if (try_forks(data, x, t.current))
+		if (try_forks(data, x))
 		{
-			philosopher_eat(data, &t.death, t.current, x);
+			philosopher_eat(data, &t.death, x);
 			if (checkoption(data))
 				return (NULL);
-			philosopher_sleep(data, x, t);
-			philosopher_think(x, t);
+			philosopher_sleep(data, x);
+			philosopher_think(data, x);
 		}
 	}
 	return (NULL);
