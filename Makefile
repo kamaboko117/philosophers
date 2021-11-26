@@ -6,7 +6,7 @@
 #    By: asaboure <asaboure@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/21 14:20:20 by asaboure          #+#    #+#              #
-#    Updated: 2021/11/25 12:49:36 by asaboure         ###   ########.fr        #
+#    Updated: 2021/11/26 18:10:57 by asaboure         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,8 @@ SRCS	=	philo.c																\
 			sources/utils.c														\
 			sources/utils2.c													\
 			sources/routine.c													\
-			sources/routine_checks.c
+			sources/routine_checks.c											\
+			sources/routine_timeout.c
 
 BONUSSRCS	=
 

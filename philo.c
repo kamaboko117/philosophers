@@ -53,7 +53,7 @@ void	philosophers(t_data *data)
 		i++;
 	}
 	i = 0;
-	while (i < data->size)
+	while (i < data->size && !data->end)
 	{
 		if (pthread_join(t[i], NULL) != 0)
 			return ;

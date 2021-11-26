@@ -6,7 +6,7 @@
 /*   By: asaboure <asaboure@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 14:36:01 by asaboure          #+#    #+#             */
-/*   Updated: 2021/11/26 13:49:07 by asaboure         ###   ########.fr       */
+/*   Updated: 2021/11/26 18:10:32 by asaboure         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,5 +46,6 @@ int		check_death(t_data *data, t_time t, int x);
 int		try_forks(t_data *data, int x);
 int		checkoption(t_data *data);
 void	ft_log(char *s, int x, t_data *data);
+int		isdying(int ms, struct timeval *death, t_data *data, int x);
 
 #endif

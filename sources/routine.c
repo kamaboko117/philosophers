@@ -6,7 +6,7 @@
 /*   By: asaboure <asaboure@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 12:17:36 by asaboure          #+#    #+#             */
-/*   Updated: 2021/11/26 14:23:50 by asaboure         ###   ########.fr       */
+/*   Updated: 2021/11/26 18:10:02 by asaboure         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	philosopher_eat(t_data *data, struct timeval *death, int x)
 {
 	ft_log("is eating", x, data);
 	timeadd(death, data->dtime);
+	if (isdying(data->etime, death, data, x))
+		return ;
 	usleep(data->etime * 1000);
 	pthread_mutex_unlock(&data->forks[x - 1]);
 	data->fstate[x - 1] = 0;
