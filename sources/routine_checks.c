@@ -6,7 +6,7 @@
 /*   By: asaboure <asaboure@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 12:47:33 by asaboure          #+#    #+#             */
-/*   Updated: 2021/11/29 16:27:50 by asaboure         ###   ########.fr       */
+/*   Updated: 2021/11/29 18:41:29 by asaboure         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,11 @@ int	try_forks(t_data *data, int x)
 
 	left = x - 1;
 	right = x;
+	if (data->size == 1 && data->fstate[0] == 0)
+	{
+		lock_fork(data, 0, 1);
+		return (0);
+	}
 	if (right == data->size)
 		right = 0;
 	if (data->fstate[left] == 0 && data->fstate[right] == 0)

@@ -6,7 +6,7 @@
 /*   By: asaboure <asaboure@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 12:17:36 by asaboure          #+#    #+#             */
-/*   Updated: 2021/11/29 16:31:38 by asaboure         ###   ########.fr       */
+/*   Updated: 2021/11/29 18:55:50 by asaboure         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,11 @@ void	philosopher_eat(t_data *data, t_time *t, int x)
 	data->xmeals[x - 1]++;
 }
 
-void	philosopher_sleep(t_data *data, int x)
+void	philosopher_sleep(t_data *data, int x, t_time *t)
 {
 	ft_log("is sleeping", x, data);
+	if (isdying(data->stime, t, data, x))
+		death_sleep(t, x, data);
 	usleep(data->stime * 1000);
 }
 
@@ -86,7 +88,7 @@ void	*routine(void *arg)
 			philosopher_eat(data, &t, x);
 			if (checkoption(data))
 				return (NULL);
-			philosopher_sleep(data, x);
+			philosopher_sleep(data, x, &t);
 			philosopher_think(data, x);
 		}
 	}

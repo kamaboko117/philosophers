@@ -6,7 +6,7 @@
 /*   By: asaboure <asaboure@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 14:36:01 by asaboure          #+#    #+#             */
-/*   Updated: 2021/11/29 16:33:31 by asaboure         ###   ########.fr       */
+/*   Updated: 2021/11/29 18:32:50 by asaboure         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,6 @@ int		checkoption(t_data *data);
 void	ft_log(char *s, int x, t_data *data);
 int		isdying(int ms, t_time *time, t_data *data, int x);
 long	tvtms(struct timeval t);
+int		death_sleep(t_time *t, int x, t_data *data);
 
 #endif

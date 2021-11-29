@@ -45,23 +45,32 @@ void	philosophers(t_data *data)
 	t = (pthread_t *)malloc(sizeof(pthread_t) * data->size);
 	if (t == NULL)
 		return ;
+	i = -1;
+	while (++i < data->size)
+		pthread_mutex_init(&data->forks[i], NULL);
 	i = 0;
 	while (i < data->size)
 	{
 		usleep(40);
 		if (pthread_create(&t[i], NULL, &routine, data) != 0)
 			return ;
-		pthread_mutex_init(&data->forks[i], NULL);
 		i++;
 	}
 	i = 0;
-	while (i < data->size && !data->end)
+	while (i < data->size)
 	{
 		if (pthread_join(t[i], NULL) != 0)
 			return ;
 		i++;
 	}
 	free(t);
+}
+
+void	free_philo(t_data *data)
+{
+	free(data->forks);
+	free(data->fstate);
+	free(data->xmeals);
 }
 
 //TODO may need to check for long int overflows
@@ -90,4 +99,5 @@ int	main(int ac, char **av)
 	ft_bzero(data.fstate, sizeof(int) * data.size);
 	ft_bzero(data.xmeals, sizeof(int) * data.size);
 	philosophers(&data);
+	free_philo(&data);
 }
