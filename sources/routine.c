@@ -6,50 +6,32 @@
 /*   By: asaboure <asaboure@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 12:17:36 by asaboure          #+#    #+#             */
-/*   Updated: 2021/11/29 18:55:50 by asaboure         ###   ########.fr       */
+/*   Updated: 2021/11/29 19:53:04 by asaboure         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
-#include <stdio.h>
 #include <unistd.h>
-
-void	ft_log(char *s, int x, t_data *data)
-{
-	struct timeval	current;
-	long			t;
-	long			ms_start;
-
-	if (data->end)
-		return ;
-	gettimeofday(&current, NULL);
-	t = tvtms(current);
-	ms_start = tvtms(data->start);
-	t -= ms_start;
-	(void)ms_start;
-	printf("%ld %d %s\n", t, x, s);
-}
 
 void	philosopher_eat(t_data *data, t_time *t, int x)
 {
+	int	left;
+	int	right;
+
+	left = x - 1;
+	right = x;
+	if (right == data->size)
+		right = 0;
 	ft_log("is eating", x, data);
 	gettimeofday(&t->death, NULL);
 	timeadd(&t->death, data->dtime);
 	if (isdying(data->etime, t, data, x))
 		return ;
 	usleep(data->etime * 1000);
-	pthread_mutex_unlock(&data->forks[x - 1]);
-	data->fstate[x - 1] = 0;
-	if (x == data->size)
-	{
-		pthread_mutex_unlock(&data->forks[0]);
-		data->fstate[0] = 0;
-	}
-	else
-	{
-		pthread_mutex_unlock(&data->forks[x]);
-		data->fstate[x] = 0;
-	}
+	pthread_mutex_unlock(&data->forks[left]);
+	data->fstate[left] = 0;
+	pthread_mutex_unlock(&data->forks[right]);
+	data->fstate[right] = 0;
 	data->xmeals[x - 1]++;
 }
 
@@ -66,6 +48,14 @@ void	philosopher_think(t_data *data, int x)
 	ft_log("is thinking", x, data);
 }
 
+void	init_routine(struct timeval *death, int x, t_data *data)
+{
+	gettimeofday(death, NULL);
+	timeadd(death, data->dtime);
+	if (x == 1)
+		gettimeofday(&data->start, NULL);
+}
+
 void	*routine(void *arg)
 {
 	t_time	t;
@@ -75,10 +65,7 @@ void	*routine(void *arg)
 	data = (t_data *)arg;
 	x = data->x;
 	data->x++;
-	gettimeofday(&t.death, NULL);
-	timeadd(&t.death, data->dtime);
-	if (x == 1)
-		gettimeofday(&data->start, NULL);
+	init_routine(&t.death, x, data);
 	while (69)
 	{
 		if (check_death(data, t, x))
@@ -91,6 +78,7 @@ void	*routine(void *arg)
 			philosopher_sleep(data, x, &t);
 			philosopher_think(data, x);
 		}
+		usleep(1000);
 	}
 	return (NULL);
 }

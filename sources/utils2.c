@@ -6,11 +6,12 @@
 /*   By: asaboure <asaboure@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 15:09:10 by asaboure          #+#    #+#             */
-/*   Updated: 2021/11/29 16:32:21 by asaboure         ###   ########.fr       */
+/*   Updated: 2021/11/29 19:52:42 by asaboure         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
+#include <stdio.h>
 
 void	ft_bzero(void *s, size_t n)
 {
@@ -32,4 +33,20 @@ long	tvtms(struct timeval t)
 	milliseconds = t.tv_sec * 1000;
 	milliseconds += t.tv_usec / 1000;
 	return (milliseconds);
+}
+
+void	ft_log(char *s, int x, t_data *data)
+{
+	struct timeval	current;
+	long			t;
+	long			ms_start;
+
+	if (data->end)
+		return ;
+	gettimeofday(&current, NULL);
+	t = tvtms(current);
+	ms_start = tvtms(data->start);
+	t -= ms_start;
+	(void)ms_start;
+	printf("%ld %d %s\n", t, x, s);
 }
