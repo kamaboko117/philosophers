@@ -6,7 +6,7 @@
 /*   By: asaboure <asaboure@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 12:17:36 by asaboure          #+#    #+#             */
-/*   Updated: 2021/11/26 18:10:02 by asaboure         ###   ########.fr       */
+/*   Updated: 2021/11/29 16:31:38 by asaboure         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,26 @@
 
 void	ft_log(char *s, int x, t_data *data)
 {
-	struct timeval	t;
+	struct timeval	current;
+	long			t;
+	long			ms_start;
 
 	if (data->end)
 		return ;
-	gettimeofday(&t, NULL);
-	printf("%ld%03ld %d %s\n", t.tv_sec, t.tv_usec / 1000, x, s);
+	gettimeofday(&current, NULL);
+	t = tvtms(current);
+	ms_start = tvtms(data->start);
+	t -= ms_start;
+	(void)ms_start;
+	printf("%ld %d %s\n", t, x, s);
 }
 
-void	philosopher_eat(t_data *data, struct timeval *death, int x)
+void	philosopher_eat(t_data *data, t_time *t, int x)
 {
 	ft_log("is eating", x, data);
-	timeadd(death, data->dtime);
-	if (isdying(data->etime, death, data, x))
+	gettimeofday(&t->death, NULL);
+	timeadd(&t->death, data->dtime);
+	if (isdying(data->etime, t, data, x))
 		return ;
 	usleep(data->etime * 1000);
 	pthread_mutex_unlock(&data->forks[x - 1]);
@@ -68,14 +75,15 @@ void	*routine(void *arg)
 	data->x++;
 	gettimeofday(&t.death, NULL);
 	timeadd(&t.death, data->dtime);
+	if (x == 1)
+		gettimeofday(&data->start, NULL);
 	while (69)
 	{
-		gettimeofday(&t.current, NULL);
 		if (check_death(data, t, x))
 			return (NULL);
 		if (try_forks(data, x))
 		{
-			philosopher_eat(data, &t.death, x);
+			philosopher_eat(data, &t, x);
 			if (checkoption(data))
 				return (NULL);
 			philosopher_sleep(data, x);

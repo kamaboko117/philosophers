@@ -13,6 +13,7 @@
 #include "philo.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 int	usage(void)
 {
@@ -47,6 +48,7 @@ void	philosophers(t_data *data)
 	i = 0;
 	while (i < data->size)
 	{
+		usleep(40);
 		if (pthread_create(&t[i], NULL, &routine, data) != 0)
 			return ;
 		pthread_mutex_init(&data->forks[i], NULL);

@@ -6,7 +6,7 @@
 /*   By: asaboure <asaboure@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 14:36:12 by asaboure          #+#    #+#             */
-/*   Updated: 2021/11/26 14:22:24 by asaboure         ###   ########.fr       */
+/*   Updated: 2021/11/29 16:33:06 by asaboure         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,6 @@ void	timeadd(struct timeval *t, int ms)
 {
 	ms *= 1000;
 	t->tv_usec += ms;
-	t->tv_sec += t->tv_usec / 100000;
-	t->tv_usec %= 100000;
+	t->tv_sec += t->tv_usec / 1000000;
+	t->tv_usec %= 1000000;
 }
