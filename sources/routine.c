@@ -6,7 +6,7 @@
 /*   By: asaboure <asaboure@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 12:17:36 by asaboure          #+#    #+#             */
-/*   Updated: 2021/11/29 19:53:04 by asaboure         ###   ########.fr       */
+/*   Updated: 2021/11/30 14:54:13 by asaboure         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void	philosopher_sleep(t_data *data, int x, t_time *t)
 void	philosopher_think(t_data *data, int x)
 {
 	ft_log("is thinking", x, data);
+	usleep(800);
 }
 
 void	init_routine(struct timeval *death, int x, t_data *data)
@@ -66,6 +67,7 @@ void	*routine(void *arg)
 	x = data->x;
 	data->x++;
 	init_routine(&t.death, x, data);
+	usleep(50 * (x - 1));
 	while (69)
 	{
 		if (check_death(data, t, x))
@@ -78,7 +80,7 @@ void	*routine(void *arg)
 			philosopher_sleep(data, x, &t);
 			philosopher_think(data, x);
 		}
-		usleep(1000);
+		usleep(200);
 	}
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: asaboure <asaboure@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 12:47:33 by asaboure          #+#    #+#             */
-/*   Updated: 2021/11/29 18:41:29 by asaboure         ###   ########.fr       */
+/*   Updated: 2021/11/30 16:17:55 by asaboure         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,35 @@ void	lock_fork(t_data *data, int fork, int x)
 	ft_log("has taken a fork", x, data);
 }
 
+int	check_greed(t_data *data, int left, int right)
+{
+	right++;
+	if (left == 0)
+		left = data->size;
+	if (right == data->size + 1)
+		right = 1;
+	if (data->xmeals[left - 1] < data->xmeals[left] || data->xmeals[right - 1]
+		< data->xmeals[left])
+		return (1);
+	return (0);
+}
+
 int	try_forks(t_data *data, int x)
 {
 	int	left;
 	int	right;
 
-	left = x - 1;
-	right = x;
 	if (data->size == 1 && data->fstate[0] == 0)
 	{
 		lock_fork(data, 0, 1);
 		return (0);
 	}
+	left = x - 1;
+	right = x;
 	if (right == data->size)
 		right = 0;
-	if (data->fstate[left] == 0 && data->fstate[right] == 0)
+	if (data->fstate[left] == 0 && data->fstate[right] == 0 && !check_greed(
+			data, left, right))
 	{
 		lock_fork(data, left, x);
 		lock_fork(data, right, x);
