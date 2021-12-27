@@ -20,15 +20,20 @@ void	lock_fork(t_data *data, int fork, int x)
 	ft_log("has taken a fork", x, data);
 }
 
-int	check_greed(t_data *data, int left, int right)
+int	check_greed(t_data *data, int x)
 {
-	right++;
-	if (left == 0)
-		left = data->size;
-	if (right == data->size + 1)
-		right = 1;
-	if (data->xmeals[left - 1] < data->xmeals[left] || data->xmeals[right - 1]
-		< data->xmeals[left])
+	int	left;
+	int	right;
+
+	x--;
+	left = x - 1;
+	right = x + 1;
+	if (left == -1)
+		left = data->size - 1;
+	if (right == data->size)
+		right = 0;
+	if (data->xmeals[left] < data->xmeals[x] || data->xmeals[right]
+		< data->xmeals[x])
 		return (1);
 	return (0);
 }
@@ -48,7 +53,7 @@ int	try_forks(t_data *data, int x)
 	if (right == data->size)
 		right = 0;
 	if (data->fstate[left] == 0 && data->fstate[right] == 0 && !check_greed(
-			data, left, right))
+			data, x))
 	{
 		lock_fork(data, left, x);
 		lock_fork(data, right, x);
@@ -66,8 +71,10 @@ int	check_death(t_data *data, t_time t, int x)
 	gettimeofday(&current, NULL);
 	if (islater(current, t.death))
 	{
+		pthread_mutex_lock(&data->m_end);
 		ft_log("died", x, data);
 		data->end = 1;
+		pthread_mutex_unlock(&data->m_end);
 		return (1);
 	}
 	return (0);

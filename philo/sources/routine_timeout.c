@@ -24,8 +24,10 @@ int	death_sleep(t_time *t, int x, t_data *data)
 	if (ms < 0)
 		ms = 0;
 	usleep(ms * 1000);
+	pthread_mutex_lock(&data->m_end);
 	ft_log("died", x, data);
 	data->end = 1;
+	pthread_mutex_unlock(&data->m_end);
 	return (1);
 }
 

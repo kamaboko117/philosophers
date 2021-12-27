@@ -29,6 +29,7 @@ typedef struct s_data
 	int				stime;
 	int				option;
 	pthread_mutex_t	*forks;
+	pthread_mutex_t	m_end;
 	int				*fstate;
 	int				x;
 	int				*xmeals;
@@ -50,5 +51,6 @@ void	ft_log(char *s, int x, t_data *data);
 int		isdying(int ms, t_time *time, t_data *data, int x);
 long	tvtms(struct timeval t);
 int		death_sleep(t_time *t, int x, t_data *data);
+void	free_thread(pthread_t *t, t_data *data);
 
 #endif

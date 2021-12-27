@@ -53,7 +53,7 @@ void	philosophers(t_data *data)
 	{
 		usleep(40);
 		if (pthread_create(&t[i], NULL, &routine, data) != 0)
-			return ;
+			return (free_thread(t, data));
 		i++;
 	}
 	i = 0;
@@ -63,7 +63,7 @@ void	philosophers(t_data *data)
 			return ;
 		i++;
 	}
-	free(t);
+	free_thread(t, data);
 }
 
 void	free_philo(t_data *data)
@@ -73,7 +73,6 @@ void	free_philo(t_data *data)
 	free(data->xmeals);
 }
 
-//TODO may need to check for long int overflows
 int	main(int ac, char **av)
 {
 	t_data	data;
@@ -89,6 +88,7 @@ int	main(int ac, char **av)
 	data.x = 1;
 	data.option = -1;
 	data.end = 0;
+	pthread_mutex_init(&data.m_end, NULL);
 	if (ac == 6)
 		data.option = ft_atoi(av[5]);
 	data.forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * data.size);

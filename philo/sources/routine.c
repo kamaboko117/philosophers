@@ -18,6 +18,8 @@ void	philosopher_eat(t_data *data, t_time *t, int x)
 	int	left;
 	int	right;
 
+	if (check_death(data, *t, x))
+		return ;
 	left = x - 1;
 	right = x;
 	if (right == data->size)

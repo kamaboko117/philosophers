@@ -12,6 +12,7 @@
 
 #include "../philo.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 void	ft_bzero(void *s, size_t n)
 {
@@ -47,6 +48,18 @@ void	ft_log(char *s, int x, t_data *data)
 	t = tvtms(current);
 	ms_start = tvtms(data->start);
 	t -= ms_start;
-	(void)ms_start;
 	printf("%ld %d %s\n", t, x, s);
+}
+
+void	free_thread(pthread_t *t, t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->size)
+	{
+		pthread_mutex_destroy(&data->forks[i]);
+		i++;
+	}
+	free(t);
 }
