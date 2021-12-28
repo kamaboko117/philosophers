@@ -35,8 +35,6 @@ int	check_args(int ac, char **av)
 	return (1);
 }
 
-//TODO free t in case of error
-//TODO destroy mutexes
 void	philosophers(t_data *data)
 {
 	pthread_t		*t;
